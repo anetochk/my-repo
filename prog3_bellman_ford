@@ -1,0 +1,39 @@
+def bellman_ford(graph, start):
+    dist = {}
+    for vertex in graph:
+        dist[vertex] = float("inf")  # Устанавливаем расстояние до всех вершин равным бесконечности
+    dist[start] = 0  # Расстояние до начальной вершины равно 0
+
+    # Выполняем |V| - 1 итераций
+    for _ in range(len(graph) - 1):
+        for vertex in graph:
+            for neighbor in graph[vertex]:
+                if dist[vertex] + graph[vertex][neighbor] < dist[neighbor]:
+                    dist[neighbor] = dist[vertex] + graph[vertex][neighbor]
+
+    # Проверяем на наличие отрицательных циклов
+    for vertex in graph:
+        for neighbor in graph[vertex]:
+            if dist[vertex] + graph[vertex][neighbor] < dist[neighbor]:
+                return "Граф содержит отрицательный цикл."
+
+    return dist
+
+# Пример графа
+graph = {
+    'A': {'B': 6, 'C': 3, 'D' : -2},
+    'B': {'C': 2, 'D': 5},
+    'C': {'F': 4},
+    'D': {'E': -3},
+    'E': {'F': -5},
+    'F': {'B': 4}
+}
+
+# Начальная вершина
+start = 'A'
+# Запуск алгоритма
+shortest_distances = bellman_ford(graph, start)
+
+# Вывод результата
+print(f"Кратчайшие расстояния от вершины {start}: {shortest_distances}")
+
